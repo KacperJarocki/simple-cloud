@@ -1,0 +1,87 @@
+name: Build Php web app
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  scan_for_vulnerabilities:
+    defaults:
+      run:
+        working-directory: app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'test'
+          path: '.'
+          format: 'HTML'
+          out: 'reports'
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports
+
+  build_docker_image:
+      needs: scan_for_vulnerabilities
+      permissions:
+       packages: write
+       security-events: write
+      defaults:
+        run:
+          working-directory: app
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+        - name: Set lowercase repo owner
+          run: echo "REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        - name: Login into GHCR
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.repository_owner}}
+            password: ${{ secrets.GITHUB_TOKEN }}
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+            
+        - name: Build and Push docker image
+          uses: docker/build-push-action@v6
+          with:
+           context: app
+           push: true
+           platforms: linux/amd64,linux/arm64 
+           tags: ghcr.io/${{ env.REPO_OWNER }}/simple-cloud:${{ github.sha }}
+          
+        - name: Run Trivy with SARIF output
+          uses: aquasecurity/trivy-action@0.28.0
+          with:
+           image-ref: 'ghcr.io/${{ env.REPO_OWNER }}/simple-cloud:${{ github.sha }}'
+           format: 'sarif'
+           output: 'trivy-results.sarif'
+           ignore-unfixed: true
+           vuln-type: 'os,library'
+           severity: 'CRITICAL,HIGH'
+          
+        - name: Upload Trivy SARIF to GitHub Security tab
+          uses: github/codeql-action/upload-sarif@v3
+          with:
+           sarif_file: trivy-results.sarif
+
+        
+
+  
+        
+    
+
+
