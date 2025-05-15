@@ -1,7 +1,6 @@
-CREATE DATABASE myapp;
-
-
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
+
+INSERT INTO users (name) VALUES ('Anna'), ('Tomasz');
