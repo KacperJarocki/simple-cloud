@@ -9,7 +9,12 @@ module "networks" {
   env     = var.env
 }
 module "compute" {
-  source   = "./modules/compute"
-  location = module.networks.location
-  rg_name  = module.networks.rg_name
+  source              = "./modules/compute"
+  location            = module.networks.location
+  rg_name             = module.networks.rg_name
+  docker_image_name   = var.docker_image_name
+  docker_image_tag    = var.docker_image_tag
+  docker_registry_url = var.docker_registry_url
+  subnet_id           = module.networks.subnet_ids["compute"]
+
 }
