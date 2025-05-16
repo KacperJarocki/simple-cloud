@@ -3,7 +3,7 @@ module "networks" {
   address_space = ["10.0.0.0/16"]
   subnet_addresses = {
     compute    = "10.0.1.0/24"
-    database1  = "10.0.5.0/24"
+    database   = "10.0.5.0/24"
     keyvault   = "10.0.3.0/24"
     monitoring = "10.0.4.0/24"
   }
@@ -46,7 +46,7 @@ module "database" {
   location          = module.networks.location
   env               = var.env
   project           = var.project
-  subnet_id         = module.networks.subnet_ids["database1"]
+  subnet_id         = module.networks.subnet_ids["database"]
 }
 
 resource "azurerm_key_vault_secret" "db_user" {
