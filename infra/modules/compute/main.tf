@@ -23,7 +23,7 @@ resource "azurerm_linux_web_app" "web_app" {
     }
   }
   tags = {
-    enviroment = var.env
+    environment = var.env
   }
 }
 resource "azurerm_app_service_virtual_network_swift_connection" "connection" {
