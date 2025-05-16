@@ -5,7 +5,7 @@ resource "azurerm_service_plan" "plan" {
   os_type             = "Linux"
   sku_name            = var.sku
   tags = {
-    enviroment = var.env
+    environment = var.env
   }
 }
 
