@@ -22,7 +22,7 @@ variable "location" {
 
 variable "sku" {
   type        = string
-  default     = "F1"
+  default     = "B1"
   description = "The pricing tier or SKU for the resource (e.g., for App Service Plans)."
 }
 
