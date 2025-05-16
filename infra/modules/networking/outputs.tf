@@ -11,7 +11,8 @@ output "vnet_id" {
 output "subnet_ids" {
   value = merge(
     {
-      compute = azurerm_subnet.subnet_compute.id,
+      compute  = azurerm_subnet.subnet_compute.id,
+      database = azurerm_subnet.subnet_database.id,
     },
     {
       for k, subnet in azurerm_subnet.subnets :
