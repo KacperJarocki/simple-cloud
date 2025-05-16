@@ -5,17 +5,17 @@ resource "azurerm_postgresql_flexible_server" "db_server" {
 
   sku_name                     = "B_Standard_B1ms"
   version                      = "11"
-  storage_mb                   = 5120
+  storage_mb                   = 32768
   backup_retention_days        = 7
   geo_redundant_backup_enabled = false
 
-  administrator_login          = "psqladmin"
-  administrator_login_password = var.postgres_password
+  administrator_login    = "psqladmin"
+  administrator_password = var.postgres_password
 
-  delegated_subnet_id = var.database_subnet_id
+  delegated_subnet_id = var.subnet_id
 
   high_availability {
-    mode = "Disabled"
+    mode = "SameZone"
   }
 
   public_network_access_enabled = false
@@ -26,11 +26,9 @@ resource "azurerm_postgresql_flexible_server" "db_server" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "db" {
-  name                = "${var.env}-${var.project}-database"
-  resource_group_name = var.rg_name
-  server_name         = azurerm_postgresql_flexible_server.db_server.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
+  name      = "${var.env}-${var.project}-database"
+  server_id = azurerm_postgresql_flexible_server.db_server.id
+  charset   = "UTF8"
 
   lifecycle {
     prevent_destroy = true
