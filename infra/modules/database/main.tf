@@ -11,7 +11,7 @@ resource "azurerm_postgresql_server" "db_server" {
 
   administrator_login          = "psqladmin"
   administrator_login_password = var.postgres_password
-  version                      = "13"
+  version                      = "11"
   ssl_enforcement_enabled      = true
 
   tags = {
