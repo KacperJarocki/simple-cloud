@@ -2,8 +2,10 @@ module "networks" {
   source        = "./modules/networking"
   address_space = ["10.0.0.0/16"]
   subnet_addresses = {
-    compute  = "10.0.1.0/24"
-    database = "10.0.2.0/24"
+    compute    = "10.0.1.0/24"
+    database   = "10.0.2.0/24"
+    keyvault   = "10.0.3.0/24"
+    monitoring = "10.0.4.0/24"
   }
   project = var.project
   env     = var.env
@@ -16,5 +18,51 @@ module "compute" {
   docker_image_tag    = var.docker_image_tag
   docker_registry_url = var.docker_registry_url
   subnet_id           = module.networks.subnet_ids["compute"]
+  db_user_secret_id   = azurerm_key_vault_secret.db_user.id
+  db_host_secret_id   = azurerm_key_vault_secret.db_user.id
+  db_pass_secret_id   = azurerm_key_vault_secret.db_user.id
+}
 
+module "keyvault" {
+  source                = "./modules/keyvault"
+  env                   = var.env
+  project               = var.project
+  location              = var.location
+  rg_name               = module.networks.rg_name
+  keyvault_subnet_id    = module.networks.subnet_ids["keyvault"]
+  vnet_id               = module.networks.vnet_id
+  identity_principal_id = module.compute.identity_principal_id
+}
+
+resource "random_password" "pg_password" {
+  length  = 16
+  special = true
+}
+
+module "database" {
+  source            = "./modules/database"
+  postgres_password = random_password.pg_password.result
+  rg_name           = module.networks.rg_name
+  location          = module.networks.location
+  env               = var.env
+  project           = var.project
+  subnet_id         = module.networks.subnet_ids["database"]
+}
+
+resource "azurerm_key_vault_secret" "db_user" {
+  name         = "db-username"
+  value        = "psqladmin"
+  key_vault_id = module.keyvault.keyvault_id
+}
+
+resource "azurerm_key_vault_secret" "db_pass" {
+  name         = "db-password"
+  value        = random_password.pg_password.result
+  key_vault_id = module.keyvault.keyvault_id
+}
+
+resource "azurerm_key_vault_secret" "db_host" {
+  name         = "db-host"
+  value        = module.database.db_fqdn
+  key_vault_id = module.keyvault.keyvault_id
 }
