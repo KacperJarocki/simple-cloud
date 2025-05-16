@@ -1,4 +1,20 @@
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "West Europe"
+module "networks" {
+  source        = "./modules/networking"
+  address_space = ["10.0.0.0/16"]
+  subnet_addresses = {
+    compute  = "10.0.1.0/24"
+    database = "10.0.2.0/24"
+  }
+  project = var.project
+  env     = var.env
+}
+module "compute" {
+  source              = "./modules/compute"
+  location            = module.networks.location
+  rg_name             = module.networks.rg_name
+  docker_image_name   = var.docker_image_name
+  docker_image_tag    = var.docker_image_tag
+  docker_registry_url = var.docker_registry_url
+  subnet_id           = module.networks.subnet_ids["compute"]
+
 }
