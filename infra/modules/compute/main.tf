@@ -14,7 +14,14 @@ resource "azurerm_linux_web_app" "web_app" {
   resource_group_name = var.rg_name
   location            = var.location
   service_plan_id     = azurerm_service_plan.plan.id
-
+  identity {
+    type = "SystemAssigned"
+  }
+  app_settings = {
+    "DB_USER"     = "@Microsoft.KeyVault(SecretUri=${var.db_user_secret_id})"
+    "DB_PASSWORD" = "@Microsoft.KeyVault(SecretUri=${var.db_pass_secret_id})"
+    "DB_HOST"     = "@Microsoft.KeyVault(SecretUri=${var.db_host_secret_id})"
+  }
   site_config {
 
     application_stack {

@@ -45,3 +45,15 @@ variable "docker_registry_url" {
   type        = string
   description = "The URL of the Docker registry from which the image will be pulled."
 }
+
+variable "db_user_secret_id" {
+  type = string
+}
+
+variable "db_pass_secret_id" {
+  type = string
+}
+
+variable "db_host_secret_id" {
+  type = string
+}
