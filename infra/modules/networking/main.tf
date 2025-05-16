@@ -1,18 +1,18 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.env}-simple-cloud-rg"
+  name     = "${var.env}-${var.project}-rg"
   location = "West Europe"
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.env}-simple-cloud-vnet"
-  address_space       = ["10.0.0.0/16"]
+  name                = "${var.env}-${var.project}-vnet"
+  address_space       = var.address_space
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_subnet" "subnet" {
   for_each             = var.subnet_addresses
-  name                 = "${var.env}-${each.key}-subnet"
+  name                 = "${var.env}-${var.project}-${each.key}-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = [each.value]
