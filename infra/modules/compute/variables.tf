@@ -27,6 +27,7 @@ variable "sku" {
 }
 
 variable "subnet_id" {
+  type        = string
   description = "The ID of the subnet in which resources like containers or services will be deployed."
 }
 
