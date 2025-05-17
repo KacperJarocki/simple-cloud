@@ -26,7 +26,7 @@ resource "azurerm_subnet" "subnet_compute" {
   }
 }
 resource "azurerm_subnet" "subnet_database" {
-  name                 = "${var.env}-${var.project}-compute-subnet"
+  name                 = "${var.env}-${var.project}-database-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = [var.subnet_addresses["database"]]
@@ -42,7 +42,7 @@ resource "azurerm_subnet" "subnet_database" {
   }
 }
 resource "azurerm_subnet" "subnets" {
-  for_each             = { for k, v in var.subnet_addresses : k => v if !contains(["compute"], k) }
+  for_each             = { for k, v in var.subnet_addresses : k => v if !contains(["compute", "database"], k) }
   name                 = "${var.env}-${var.project}-${each.key}-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
