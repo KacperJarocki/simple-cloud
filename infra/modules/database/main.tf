@@ -24,10 +24,8 @@ resource "azurerm_postgresql_flexible_server" "db_server" {
   administrator_password        = var.postgres_password
   delegated_subnet_id           = var.subnet_id
   public_network_access_enabled = false
+  zone                          = "1"
 
-  high_availability {
-    mode = "SameZone"
-  }
   tags = {
     environment = var.env
   }
