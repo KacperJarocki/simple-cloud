@@ -11,6 +11,7 @@ module "networks" {
   env     = var.env
 }
 module "compute" {
+  project             = var.project
   source              = "./modules/compute"
   location            = module.networks.location
   rg_name             = module.networks.rg_name

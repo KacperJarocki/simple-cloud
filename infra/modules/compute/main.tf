@@ -22,7 +22,7 @@ resource "azurerm_linux_web_app" "web_app" {
     "DB_PASS" = "@Microsoft.KeyVault(SecretUri=${var.db_pass_secret_id})"
     "DB_HOST" = "@Microsoft.KeyVault(SecretUri=${var.db_host_secret_id})"
     "DB_PORT" = "5432"
-    "DB_NAME" = "my-database-name"
+    "DB_NAME" = "${var.env}-${var.project}-database"
   }
   site_config {
 
