@@ -1,3 +1,15 @@
+resource "azurerm_private_dns_zone" "database_zone" {
+  name                = "${var.env}.${var.project}.postgres.database.azure.com"
+  resource_group_name = var.rg_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "network_link" {
+  name                  = "${var.env}-${var.project}-database-server-zone.com"
+  private_dns_zone_name = azurerm_private_dns_zone.database_zone.name
+  virtual_network_id    = var.vnet_id
+  resource_group_name   = var.rg_name
+}
+
 resource "azurerm_postgresql_flexible_server" "db_server" {
   name                = "${var.env}-${var.project}-database-server"
   location            = var.location

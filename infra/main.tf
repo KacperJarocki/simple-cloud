@@ -47,6 +47,7 @@ module "database" {
   env               = var.env
   project           = var.project
   subnet_id         = module.networks.subnet_ids["database"]
+  vnet_id           = module.networks.vnet_id
 }
 
 resource "azurerm_key_vault_secret" "db_user" {

@@ -35,3 +35,8 @@ variable "postgres_password" {
   sensitive   = true
   description = "Password"
 }
+
+variable "vnet_id" {
+  type        = string
+  description = "The ID of the vnet in which resources like containers or services will be deployed."
+}
