@@ -35,5 +35,4 @@ resource "azurerm_postgresql_flexible_server_database" "db" {
   name      = "${var.env}-${var.project}-database"
   server_id = azurerm_postgresql_flexible_server.db_server.id
   charset   = "UTF8"
-
 }

@@ -55,14 +55,3 @@ resource "azurerm_private_dns_a_record" "kv_a_record" {
   ttl                 = 300
   records             = [azurerm_private_endpoint.kv_pe.private_service_connection[0].private_ip_address]
 }
-resource "azurerm_key_vault_access_policy" "appservice_policy" {
-  key_vault_id = azurerm_key_vault.kv.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.identity_principal_id
-
-  secret_permissions = [
-    "Get",
-    "List"
-  ]
-}
-

@@ -22,17 +22,17 @@ module "compute" {
   db_user_secret_id   = azurerm_key_vault_secret.db_user.id
   db_host_secret_id   = azurerm_key_vault_secret.db_host.id
   db_pass_secret_id   = azurerm_key_vault_secret.db_pass.id
+  keyvault_id         = module.keyvault.keyvault_id
 }
 
 module "keyvault" {
-  source                = "./modules/keyvault"
-  env                   = var.env
-  project               = var.project
-  location              = var.location
-  rg_name               = module.networks.rg_name
-  keyvault_subnet_id    = module.networks.subnet_ids["keyvault"]
-  vnet_id               = module.networks.vnet_id
-  identity_principal_id = module.compute.identity_principal_id
+  source             = "./modules/keyvault"
+  env                = var.env
+  project            = var.project
+  location           = var.location
+  rg_name            = module.networks.rg_name
+  keyvault_subnet_id = module.networks.subnet_ids["keyvault"]
+  vnet_id            = module.networks.vnet_id
 }
 
 resource "random_password" "pg_password" {

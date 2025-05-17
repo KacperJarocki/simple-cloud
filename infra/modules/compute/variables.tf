@@ -46,6 +46,11 @@ variable "docker_registry_url" {
   description = "The URL of the Docker registry from which the image will be pulled."
 }
 
+variable "keyvault_id" {
+  type        = string
+  description = "keyvault id"
+}
+
 variable "db_user_secret_id" {
   type = string
 }
