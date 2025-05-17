@@ -18,10 +18,11 @@ resource "azurerm_linux_web_app" "web_app" {
     type = "SystemAssigned"
   }
   app_settings = {
-    "DB_USER"     = "@Microsoft.KeyVault(SecretUri=${var.db_user_secret_id})"
-    "DB_PASSWORD" = "@Microsoft.KeyVault(SecretUri=${var.db_pass_secret_id})"
-    "DB_HOST"     = "@Microsoft.KeyVault(SecretUri=${var.db_host_secret_id})"
-    "DB_PORT"     = "5432"
+    "DB_USER" = "@Microsoft.KeyVault(SecretUri=${var.db_user_secret_id})"
+    "DB_PASS" = "@Microsoft.KeyVault(SecretUri=${var.db_pass_secret_id})"
+    "DB_HOST" = "@Microsoft.KeyVault(SecretUri=${var.db_host_secret_id})"
+    "DB_PORT" = "5432"
+    "DB_NAME" = "my-database-name"
   }
   site_config {
 
