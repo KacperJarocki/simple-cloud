@@ -20,8 +20,8 @@ module "compute" {
   docker_registry_url = var.docker_registry_url
   subnet_id           = module.networks.subnet_ids["compute"]
   db_user_secret_id   = azurerm_key_vault_secret.db_user.id
-  db_host_secret_id   = azurerm_key_vault_secret.db_user.id
-  db_pass_secret_id   = azurerm_key_vault_secret.db_user.id
+  db_host_secret_id   = azurerm_key_vault_secret.db_host.id
+  db_pass_secret_id   = azurerm_key_vault_secret.db_pass.id
 }
 
 module "keyvault" {
