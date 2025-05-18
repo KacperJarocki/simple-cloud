@@ -1,0 +1,27 @@
+name: On Database Created
+
+on:
+  repository_dispatch:
+    types: [database-created]
+
+jobs:
+  handle-new-db:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Flyway Migrations
+        uses: red-gate/FlywayGithubAction@main
+        with:
+          url: jdbc:postgresql://${{ github.event.client_payload.db_host }}:5432/${{ github.event.client_payload.db_name }}
+          user: ${{ github.event.client_payload.db_user }}
+          password: ${{ github.event.client_payload.db_password }}
+          locations: filesystem:./database/migrations
+
+      - name: Print database info
+        run: |
+          echo "📦 Database Name: ${{ github.event.client_payload.db_name }}"
+          echo "🌐 Host: ${{ github.event.client_payload.db_host }}"
+          echo "👤 User: ${{ github.event.client_payload.db_user }}"
