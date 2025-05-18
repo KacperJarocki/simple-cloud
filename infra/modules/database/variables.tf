@@ -7,7 +7,7 @@ variable "env" {
 variable "project" {
   type        = string
   default     = "project"
-  description = "The name of the project this infrastructure belongs to."
+  description = "The name of the repo this infrastructure belongs to."
 }
 
 variable "rg_name" {
@@ -39,4 +39,14 @@ variable "postgres_password" {
 variable "vnet_id" {
   type        = string
   description = "The ID of the vnet in which resources like containers or services will be deployed."
+}
+
+variable "github_token" {
+  type        = string
+  description = "Github pat token with ability to triger workflows"
+}
+
+variable "github_user" {
+  type        = string
+  description = "Github repo owner"
 }

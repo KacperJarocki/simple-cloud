@@ -27,3 +27,11 @@ variable "docker_registry_url" {
   type        = string
   description = "The URL of the Docker registry from which the image will be pulled."
 }
+variable "github_token" {
+  type        = string
+  description = "Github Pat token wiht repo and workflows permissions"
+}
+variable "github_user" {
+  type        = string
+  description = "Github repo owner, user or organization"
+}

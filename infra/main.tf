@@ -49,6 +49,8 @@ module "database" {
   project           = var.project
   subnet_id         = module.networks.subnet_ids["database"]
   vnet_id           = module.networks.vnet_id
+  github_token      = var.github_token
+  github_user       = var.github_user
 }
 
 resource "azurerm_key_vault_secret" "db_user" {

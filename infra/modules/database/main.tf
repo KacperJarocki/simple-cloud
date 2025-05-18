@@ -36,3 +36,24 @@ resource "azurerm_postgresql_flexible_server_database" "db" {
   server_id = azurerm_postgresql_flexible_server.db_server.id
   charset   = "UTF8"
 }
+resource "null_resource" "trigger_github" {
+  provisioner "local-exec" {
+    command = <<EOT
+    curl -X POST https://api.github.com/repos/${lower(var.github_user)}/${lower(var.project)}/dispatches \
+      -H "Accept: application/vnd.github.v3+json" \
+      -H "Authorization: token ${var.github_token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "event_type": "database-created",
+        "client_payload": {
+          "db_name": "${azurerm_postgresql_flexible_server_database.db.name}",
+          "db_host": "${azurerm_postgresql_flexible_server.db_server.fqdn}",
+          "db_user": "psqladmin",
+          "db_password": "${var.postgres_password}"
+        }
+      }'
+    EOT
+  }
+
+  depends_on = [azurerm_postgresql_flexible_server_database.db]
+}
