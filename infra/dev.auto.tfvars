@@ -1,0 +1,6 @@
+project             = "simple-cloud"
+env                 = "dev"
+location            = "westeurope"
+docker_image_name   = "ghcr.io/kacperjarocki/simple-cloud"
+docker_image_tag    = "b5c9e242248a80edf9f49639aa125c5d22418d6d"
+docker_registry_url = "ghcr.io"

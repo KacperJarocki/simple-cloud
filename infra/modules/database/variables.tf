@@ -41,12 +41,3 @@ variable "vnet_id" {
   description = "The ID of the vnet in which resources like containers or services will be deployed."
 }
 
-variable "github_token" {
-  type        = string
-  description = "Github pat token with ability to triger workflows"
-}
-
-variable "github_user" {
-  type        = string
-  description = "Github repo owner"
-}
