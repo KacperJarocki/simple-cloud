@@ -27,6 +27,9 @@ resource "azurerm_linux_web_app" "web_app" {
     "DB_PORT" = "5432"
     "DB_NAME" = "${var.env}-${var.project}-database"
   }
+  depends_on = [
+    azurerm_key_vault_access_policy.appservice_policy
+  ]
   site_config {
 
     application_stack {
