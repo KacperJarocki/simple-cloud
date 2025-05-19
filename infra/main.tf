@@ -23,6 +23,10 @@ module "compute" {
   db_host_secret_id   = azurerm_key_vault_secret.db_host.id
   db_pass_secret_id   = azurerm_key_vault_secret.db_pass.id
   keyvault_id         = module.keyvault.keyvault_id
+  depends_on = [
+    module.networks,
+    module.keyvault
+  ]
 }
 
 module "keyvault" {
