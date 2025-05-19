@@ -62,12 +62,9 @@ resource "azurerm_linux_web_app" "web_app" {
     }
   }
 
+  virtual_network_subnet_id = var.subnet_id
   tags = {
     environment = var.env
   }
 
-}
-resource "azurerm_app_service_virtual_network_swift_connection" "connection" {
-  app_service_id = azurerm_linux_web_app.web_app.id
-  subnet_id      = var.subnet_id
 }
