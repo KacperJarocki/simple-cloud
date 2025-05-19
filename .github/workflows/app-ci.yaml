@@ -99,7 +99,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           if [[ `git status --porcelain` ]]; then
-            git add terraform.auto.tfvars
+            git add *.auto.tfvars
             git commit -m "chore: update docker_image_tag to $GITHUB_SHA"
             git push origin HEAD
           else
