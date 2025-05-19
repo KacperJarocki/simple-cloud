@@ -11,11 +11,6 @@ resource "azurerm_service_plan" "plan" {
   }
 }
 
-resource "azurerm_user_assigned_identity" "web_app_identity" {
-  name                = "${var.env}-${var.project}-identity"
-  resource_group_name = var.rg_name
-  location            = var.location
-}
 
 resource "azurerm_linux_web_app" "web_app" {
   name                = "${var.env}-${var.project}-web-app"
@@ -23,8 +18,7 @@ resource "azurerm_linux_web_app" "web_app" {
   location            = var.location
   service_plan_id     = azurerm_service_plan.plan.id
   identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.web_app_identity.id]
+    type = "SystemAssigned"
   }
   app_settings = {
     "DB_USER" = "@Microsoft.KeyVault(SecretUri=${var.db_user_secret_id})"
@@ -52,7 +46,11 @@ resource "azurerm_app_service_virtual_network_swift_connection" "connection" {
 resource "azurerm_key_vault_access_policy" "appservice_policy" {
   key_vault_id = var.keyvault_id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = azurerm_user_assigned_identity.web_app_identity.principal_id
+  object_id    = azurerm_linux_web_app.web_app.identity[0].principal_id
+
+  depends_on = [
+    azurerm_linux_web_app.web_app
+  ]
   secret_permissions = [
     "Get",
     "List"
