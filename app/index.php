@@ -11,7 +11,12 @@ try {
     $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-
+    $stmt = $pdo ->query('
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+');
     $stmt = $pdo->query('SELECT * FROM users');
     $users = $stmt->fetchAll();
 
