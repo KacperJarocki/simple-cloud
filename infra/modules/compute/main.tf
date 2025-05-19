@@ -66,9 +66,6 @@ resource "azurerm_linux_web_app" "web_app" {
     environment = var.env
   }
 
-  depends_on = [
-    azurerm_key_vault_access_policy.uai_policy
-  ]
 }
 resource "azurerm_app_service_virtual_network_swift_connection" "connection" {
   app_service_id = azurerm_linux_web_app.web_app.id
