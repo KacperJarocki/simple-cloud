@@ -28,12 +28,12 @@ CREATE TABLE IF NOT EXISTS users (
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Użytkownicy</title>
+    <title>Użytkownicy Strony</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container">
-    <h1>Dodaj użytkownika</h1>
+    <h1>Dodaj użytkownika tej skomplikowanej strony</h1>
     <form action="add_user.php" method="post">
         <input type="text" name="name" placeholder="Imię" required>
         <button type="submit">Dodaj</button>
