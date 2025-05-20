@@ -1,0 +1,1 @@
+docker_image_tag = "827670f676cd8129883c3f5e9a681dd4e727e5da"

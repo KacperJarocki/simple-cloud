@@ -79,3 +79,29 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-results.sarif
+
+  update-tag:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    needs: build_docker_image
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Replace docker_image_tag with commit SHA
+        run: sed -i "s/^docker_image_tag *= *\"[a-f0-9]\+\"/docker_image_tag = \"${GITHUB_SHA}\"/" *.auto.tfvars
+
+      - name: Commit and push change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [[ `git status --porcelain` ]]; then
+            git add *.auto.tfvars
+            git commit -m "chore: update docker_image_tag to $GITHUB_SHA"
+            git push origin HEAD
+          else
+            echo "No changes to commit."
+          fi
