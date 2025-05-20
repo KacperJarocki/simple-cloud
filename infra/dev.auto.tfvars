@@ -1,1 +1,1 @@
-docker_image_tag = "cff67eb44cbde3fb2a26f2f801f507940ce6789f"
+docker_image_tag = "3f58cfd488be0f47267e4a51b12928c55925baab"
