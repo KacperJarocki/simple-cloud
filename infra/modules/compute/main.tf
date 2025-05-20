@@ -1,11 +1,17 @@
 data "azurerm_client_config" "current" {}
 
+locals {
+  is_prod       = lower(var.env) == "prod"
+  plan_sku      = local.is_prod ? "P1v2" : var.sku
+  plan_capacity = local.is_prod ? 3 : 1
+}
+
 resource "azurerm_service_plan" "plan" {
   name                = "${var.env}-${var.project}-service-plan"
   resource_group_name = var.rg_name
   location            = var.location
   os_type             = "Linux"
-  sku_name            = var.sku
+  sku_name            = local.plan_sku
   tags = {
     environment = var.env
   }
@@ -73,5 +79,61 @@ resource "azurerm_linux_web_app" "web_app" {
   virtual_network_subnet_id = var.subnet_id
   tags = {
     environment = var.env
+  }
+}
+
+resource "azurerm_monitor_autoscale_setting" "autoscale" {
+  count = lower(var.env) == "prod" ? 1 : 0
+
+  name                = "${var.env}-${var.project}-autoscale"
+  resource_group_name = var.rg_name
+  target_resource_id  = azurerm_service_plan.plan.id
+  enabled             = true
+  location            = var.location
+  profile {
+    name = "AutoScaleProfile"
+    capacity {
+      minimum = "1"
+      maximum = "5"
+      default = "3"
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "CpuPercentage"
+        metric_resource_id = azurerm_service_plan.plan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 70
+      }
+      scale_action {
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT5M"
+      }
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "CpuPercentage"
+        metric_resource_id = azurerm_service_plan.plan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 30
+      }
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT5M"
+      }
+    }
   }
 }

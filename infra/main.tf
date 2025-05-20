@@ -65,6 +65,21 @@ module "database" {
   vnet_id           = module.networks.vnet_id
 }
 
+module "frontdoor" {
+  source   = "./modules/frontdoor"
+  rg_name  = module.networks.rg_name
+  location = module.networks.location
+  env      = var.env
+  project  = var.project
+
+  backend_host = module.compute.web_app_name
+  backend_fqdn = module.compute.web_app_default_hostname
+
+  depends_on = [
+    module.compute
+  ]
+}
+
 resource "azurerm_key_vault_secret" "db_user" {
   name         = "db-username"
   value        = "psqladmin"
