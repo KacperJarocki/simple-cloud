@@ -48,6 +48,9 @@ resource "azurerm_linux_web_app" "web_app" {
   location            = var.location
   service_plan_id     = azurerm_service_plan.plan.id
 
+  lifecycle {
+    create_before_destroy = true
+  }
   identity {
     type = "UserAssigned"
     identity_ids = [
