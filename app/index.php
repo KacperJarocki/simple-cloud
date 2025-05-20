@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS users (
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Użytkownicy</title>
+    <title>Użytkownicy Strony</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
