@@ -32,6 +32,16 @@ resource "azurerm_key_vault_access_policy" "uai_policy" {
   ]
 }
 
+resource "null_resource" "wait_for_propagation" {
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
+
+  depends_on = [
+    azurerm_key_vault_access_policy.uai_policy
+  ]
+}
+
 resource "azurerm_linux_web_app" "web_app" {
   name                = "${var.env}-${var.project}-web-app"
   resource_group_name = var.rg_name
@@ -67,4 +77,8 @@ resource "azurerm_linux_web_app" "web_app" {
     environment = var.env
   }
 
+
+  depends_on = [
+    null_resource.wait_for_propagation
+  ]
 }
