@@ -62,3 +62,14 @@ variable "db_pass_secret_id" {
 variable "db_host_secret_id" {
   type = string
 }
+variable "appinsights_connection_string_secret_uri" {
+  type = string
+}
+
+variable "appinsights_instrumentation_key_secret_uri" {
+  type = string
+}
+
+variable "app_role_name" {
+  type = string
+}

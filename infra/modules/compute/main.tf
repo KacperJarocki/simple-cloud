@@ -52,11 +52,14 @@ resource "azurerm_linux_web_app" "web_app" {
   key_vault_reference_identity_id = azurerm_user_assigned_identity.uai.id
 
   app_settings = {
-    "DB_USER" = "@Microsoft.KeyVault(SecretUri=${var.db_user_secret_id})"
-    "DB_PASS" = "@Microsoft.KeyVault(SecretUri=${var.db_pass_secret_id})"
-    "DB_HOST" = "@Microsoft.KeyVault(SecretUri=${var.db_host_secret_id})"
-    "DB_PORT" = "5432"
-    "DB_NAME" = "${var.env}-${var.project}-database"
+    "DB_USER"                               = "@Microsoft.KeyVault(SecretUri=${var.db_user_secret_id})"
+    "DB_PASS"                               = "@Microsoft.KeyVault(SecretUri=${var.db_pass_secret_id})"
+    "DB_HOST"                               = "@Microsoft.KeyVault(SecretUri=${var.db_host_secret_id})"
+    "DB_PORT"                               = "5432"
+    "DB_NAME"                               = "${var.env}-${var.project}-database"
+    "APPLICATIONINSIGHTS_CONNECTION_STRING" = "@Microsoft.KeyVault(SecretUri=${var.appinsights_connection_string_secret_uri})"
+    "APPINSIGHTS_INSTRUMENTATIONKEY"        = "@Microsoft.KeyVault(SecretUri=${var.appinsights_instrumentation_key_secret_uri})"
+    "APPLICATIONINSIGHTS_ROLE_NAME"         = var.app_role_name
   }
 
   site_config {
