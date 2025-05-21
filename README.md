@@ -76,7 +76,7 @@ This infrastructure is deployed and managed via **Terraform Cloud**. All environ
 
 ---
 
-### Project Structure
+### Infra Structure
 
 ```
 .
@@ -87,16 +87,15 @@ This infrastructure is deployed and managed via **Terraform Cloud**. All environ
 │   ├── keyvault/
 │   ├── monitoring/
 │   └── frontdoor/
-├── environments/
-│   ├── dev/
-│   └── prod/
 ├── main.tf
 ├── variables.tf
+├── *.auto.tfvars
 └── outputs.tf
 ```
 
 - **modules/** - contains reusable Terraform modules for each resource type.
 - **main.tf** - root configuration which calls modules and sets environment.
+- \*.auto.tfvars - contains hash of latest docker image
 
 ---
 
