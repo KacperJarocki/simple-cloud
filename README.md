@@ -63,60 +63,68 @@ This infrastructure is deployed and managed via **Terraform Cloud**. All environ
    ```bash
    git clone https://github.com/kacperjarocki/simple-cloud.git
    cd simple-cloud
-   Log in to Terraform Cloud and select the desired workspace (dev or prod).
    ```
+2. Log in to Terraform Cloud and select the desired workspace (dev or prod).
 
-Set or verify the workspace variables in Terraform Cloud UI or CLI:
+3. Set or verify the workspace variables in Terraform Cloud UI or CLI:
 
-Azure credentials (Client ID, Client Secret, Tenant ID, Subscription ID)
+   - Azure credentials (Client ID, Client Secret, Tenant ID, Subscription ID)
+   - Resource names and configurations specific to the environment
+   - Secrets or references to Azure Key Vault secrets
 
-Resource names and configurations specific to the environment
+4. Run Terraform Cloud runs via the UI or API — Terraform Cloud will handle `terraform init`, `plan`, and `apply` automatically based on the workspace configuration.
 
-Secrets or references to Azure Key Vault secrets
+---
 
-Run Terraform Cloud runs via the UI or API — Terraform Cloud will handle terraform init, plan, and apply automatically based on the workspace configuration.
+### Project Structure
 
-Project Structure
+```
 .
 ├── modules/
-│ ├── networking/
-│ ├── compute/
-│ ├── database/
-│ ├── keyvault/
-│ ├── monitoring/
-│ └── frontdoor/
+│   ├── networking/
+│   ├── compute/
+│   ├── database/
+│   ├── keyvault/
+│   ├── monitoring/
+│   └── frontdoor/
 ├── environments/
-│ ├── dev/
-│ └── prod/
+│   ├── dev/
+│   └── prod/
 ├── main.tf
 ├── variables.tf
 └── outputs.tf
+```
 
-modules/ - contains reusable Terraform modules for each resource type.
+- **modules/** - contains reusable Terraform modules for each resource type.
+- **main.tf** - root configuration which calls modules and sets environment.
 
-main.tf - root configuration which calls modules and sets environment.
+---
 
-Notes on Key Vault Usage
-Both dev and prod environments use Azure Key Vault to securely manage secrets such as database credentials, App Service identities, and API keys.
+### Notes on Key Vault Usage
 
-Key Vault is configured with Private Endpoints in both environments to restrict network access.
+- Both dev and prod environments use Azure Key Vault to securely manage secrets such as database credentials, App Service identities, and API keys.
+- Key Vault is configured with Private Endpoints in both environments to restrict network access.
+- Access policies in dev are more permissive to allow easier testing and development workflows.
+- In prod, access is tightly controlled with RBAC, auditing enabled, and secrets are rotated regularly.
+- The App Service in both environments has managed identities assigned for seamless access to Key Vault without embedding secrets in code or configuration.
 
-Access policies in dev are more permissive to allow easier testing and development workflows.
+---
 
-In prod, access is tightly controlled with RBAC, auditing enabled, and secrets are rotated regularly.
+### Monitoring & Logging
 
-The App Service in both environments has managed identities assigned for seamless access to Key Vault without embedding secrets in code or configuration.
+- Basic Application Insights integration is enabled in dev for easy diagnostics.
+- Production environment includes full Azure Monitor setup with alerts, dashboards, and diagnostic logs configured for SLA and compliance.
 
-Monitoring & Logging
-Basic Application Insights integration is enabled in dev for easy diagnostics.
+---
 
-Production environment includes full Azure Monitor setup with alerts, dashboards, and diagnostic logs configured for SLA and compliance.
+### Troubleshooting & Support
 
-Troubleshooting & Support
 If you encounter any issues during deployment:
 
-Verify your Terraform Cloud workspace variables and secrets are correctly set.
+- Verify your Terraform Cloud workspace variables and secrets are correctly set.
+- Ensure Azure service principal has sufficient permissions.
+- Check Azure portal for resource health and activity logs.
 
-Ensure Azure service principal has sufficient permissions.
+```
 
-Check Azure portal for resource health and activity logs.
+```
