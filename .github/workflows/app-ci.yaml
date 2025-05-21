@@ -89,19 +89,22 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current branch name
+        id: vars
+        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> "$GITHUB_OUTPUT"
 
       - name: Replace docker_image_tag with commit SHA
         run: sed -i "s/^docker_image_tag *= *\"[a-f0-9]\+\"/docker_image_tag = \"${GITHUB_SHA}\"/" *.auto.tfvars
 
-      - name: Commit and push change
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          if [[ `git status --porcelain` ]]; then
-            git add *.auto.tfvars
-            git commit -m "chore: update docker_image_tag to $GITHUB_SHA"
-            git push origin HEAD
-          else
-            echo "No changes to commit."
-          fi
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update docker_image_tag to ${{ github.sha }}"
+          branch: update-tag-${{ github.sha }}
+          title: "chore: update docker_image_tag to ${{ github.sha }}"
+          body: "This PR updates the docker_image_tag to `${{ github.sha }}`"
+          base: ${{ steps.vars.outputs.branch_name }}

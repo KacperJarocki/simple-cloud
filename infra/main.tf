@@ -11,6 +11,7 @@ module "networks" {
 }
 module "compute" {
   project                                    = var.project
+  env                                        = var.env
   source                                     = "./modules/compute"
   location                                   = module.networks.location
   rg_name                                    = module.networks.rg_name
@@ -66,12 +67,11 @@ module "database" {
 }
 
 module "frontdoor" {
-  source   = "./modules/frontdoor"
-  rg_name  = module.networks.rg_name
-  location = module.networks.location
-  env      = var.env
-  project  = var.project
-
+  source       = "./modules/frontdoor"
+  rg_name      = module.networks.rg_name
+  location     = module.networks.location
+  env          = var.env
+  project      = var.project
   backend_host = module.compute.web_app_name
   backend_fqdn = module.compute.web_app_default_hostname
 
