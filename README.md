@@ -59,21 +59,25 @@ This infrastructure is deployed and managed via **Terraform Cloud**. All environ
 
 ## How to Deploy
 
-1. Clone this repository:
+1. Clone this repository locally:
    ```bash
    git clone https://github.com/kacperjarocki/simple-cloud.git
    cd simple-cloud
    Log in to Terraform Cloud and select the desired workspace (dev or prod).
    ```
 
-Set or verify workspace variables in Terraform Cloud:
+Set or verify the workspace variables in Terraform Cloud UI or CLI:
 
 Azure credentials (Client ID, Client Secret, Tenant ID, Subscription ID)
 
-Resource names and configurations specific to environment
+Resource names and configurations specific to the environment
 
-Secrets or references to Key Vault secrets
+Secrets or references to Azure Key Vault secrets
 
+Run Terraform Cloud runs via the UI or API — Terraform Cloud will handle terraform init, plan, and apply automatically based on the workspace configuration.
+
+Project Structure
+.
 ├── modules/
 │ ├── networking/
 │ ├── compute/
@@ -89,8 +93,6 @@ Secrets or references to Key Vault secrets
 └── outputs.tf
 
 modules/ - contains reusable Terraform modules for each resource type.
-
-environments/ - environment-specific configurations and variable overrides.
 
 main.tf - root configuration which calls modules and sets environment.
 
@@ -118,5 +120,3 @@ Verify your Terraform Cloud workspace variables and secrets are correctly set.
 Ensure Azure service principal has sufficient permissions.
 
 Check Azure portal for resource health and activity logs.
-
-Review Terraform plan and apply outputs for errors.
